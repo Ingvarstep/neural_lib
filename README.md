@@ -1,13 +1,13 @@
 # neural_lib
 
-Basic neural networks library written in Python for educational purposes 
+Basic neural networks library written in Python for educational purposes.
 
 ### Structure
 
-The code is divided into the following modules and, with some approximation, copies PyTorch APIs:  \
--	structs.py - where are realized Value and Tensor objects, the last one store data in the form of a matrix, \ with x rows and y columns; the single  value of this matrix is a Value object.  \
--	nn.py - collects different architectures of neural networks (currently, only one Linear layer) with loss functions; \
--	optim.py - contains different optimization algorithms as single objects; \
+The code is divided into the following modules and, with some approximation, copies PyTorch APIs:  
+-	structs.py - where are realized Value and Tensor objects, the last one store data in the form of a matrix, with x rows and y columns; the single  value of this matrix is a Value object.  
+-	nn.py - collects different architectures of neural networks (currently, only one Linear layer) with loss functions; 
+-	optim.py - contains different optimization algorithms as single objects;
 
 
 ### Example
