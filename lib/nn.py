@@ -1,4 +1,6 @@
-from lib.structs import Value, Tensor
+from lib.tensor import Tensor
+from lib.micrograd import Value
+
 from abc import abstractmethod
 
 class Module:

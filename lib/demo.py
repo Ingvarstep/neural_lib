@@ -1,4 +1,4 @@
-from lib.structs import Tensor
+from lib.tensor import Tensor
 from lib.nn import Linear, MSE
 from lib.optim import Adam
 from tqdm import tqdm
