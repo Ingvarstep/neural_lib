@@ -24,9 +24,11 @@ class Linear(Module):
     def forward(self, x):
         return x @ self.W + self.b
 
-    def parameters(self):
+    def micro_parameters(self):
         return [ v for row in self.W.data for v in row] + [v for row in self.b.data for v in row]
-
+    
+    def parameters(self):
+        return [self.W, self.b]
 
 class ReLU(Module):
     def __init__(self):

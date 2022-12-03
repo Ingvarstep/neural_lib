@@ -1,6 +1,7 @@
 import random
 import math
-from micrograd import Value
+from lib.micrograd import Value
+import lib.autograd as autograd
 
 class Tensor:
     def __init__(self, data, dtype, view = None, requires_grad = False, grad = True):
@@ -48,7 +49,7 @@ class Tensor:
             raise ValueError("Amount of columns in first matrix is not equal to amount of rows in second matrix")
         out = Tensor([[sum(a*b for a,b in zip(X_row,Y_col)) for Y_col in zip(*mat.data)] for X_row in self.data], self.dtype)
 
-        self.grad_fn = MatMulBackward(self, mat, out)
+        self.grad_fn = autograd.MatMulBackward(self, mat, out)
 
         return out
     
@@ -63,7 +64,7 @@ class Tensor:
             raise ValueError("Amount of rows or columns is not the same")
         out = Tensor([[a+b for a,b in zip(X_row,Y_row)] for X_row,Y_row in zip(self.data, other.data)], self.dtype)
 
-        self.grad_fn = AddBackward(self, other, out)
+        self.grad_fn = autograd.AddBackward(self, other, out)
 
         return out
     
@@ -79,7 +80,7 @@ class Tensor:
         else:
             out = Tensor([[a*b for a,b in zip(X_row,Y_row)] for X_row,Y_row in zip(self.data, other.data)], self.dtype)
             
-        self.grad_fn = MulBackward(self, other, out)
+        self.grad_fn = autograd.MulBackward(self, other, out)
 
         return out
     
@@ -91,7 +92,7 @@ class Tensor:
             raise TypeError(f"Expected int or float, got {type(other)}")
         out = Tensor([[a**other for a in X_row] for X_row in self.data], self.dtype)
 
-        self.grad_fn = PowBackward(self, other, out)
+        self.grad_fn = autograd.PowBackward(self, other, out)
 
         return out
     
@@ -126,15 +127,17 @@ class Tensor:
     def backward(self):
         topo = []
         seen = set()
-        def dfs(self.grad_fn):
+        def dfs(self):
             if self not in seen:
                 seen.add(self)
                 for i in self.grad_fn.next_functions:
                     dfs(i)
-                topo.append(self)
-        dfs(self.grad_fn)
+                topo.append(self.grad_fn)
+        dfs(self)
         self.grad +=1
         for i in reversed(topo):
+            if isinstance(i, (autograd.AccumulateGrad, None)):
+                continue
             i.backward()
         
     def micrograd_zero_grad(self):
@@ -161,7 +164,7 @@ class Tensor:
     
     def relu(self):
         out = Tensor([[a.relu() for a in X_row] for X_row in self.data], self.dtype)
-        self.grad_fn = ReLUBackward(self, out)
+        self.grad_fn = autograd.ReLUBackward(self, out)
         return out
     
     def mean(self):

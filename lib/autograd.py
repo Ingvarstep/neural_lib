@@ -1,5 +1,4 @@
-import math
-from tensor import Tensor
+from lib.tensor import Tensor
 
 class NodeFunction:
     def __init__(self, v1, v2, out):
@@ -50,8 +49,8 @@ class MatMulBackward(NodeFunction):
         super().__init__(v1, v2, out)
     
     def backward(self):
-        self.v1.grad+=self.out.grad @ self.v2.data.T
-        self.v2.grad+=self.v1.data.T @ self.out.grad
+        self.v1.grad+=self.out.grad @ self.v2.transpose()
+        self.v2.grad+=self.v1.transpose() @ self.out.grad
 
 class SinBackward(NodeFunction):
     def __init__(self, v1, out):

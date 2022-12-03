@@ -1,4 +1,4 @@
-from lib.structs import Tensor
+from lib.tensor import Tensor
 # from lib.nn import Linear
 
 class Optimizer:
@@ -13,7 +13,7 @@ class SGD(Optimizer):
     
     def step(self):
         for param in self.params:
-            param.data -= self.lr*param.grad
+            param -= self.lr*param.grad
 
 class Adam(Optimizer):
     def __init__(self, params, lr, beta1 = 0.9, beta2 = 0.999, eps = 1e-8):
@@ -36,4 +36,4 @@ class Adam(Optimizer):
             m_hat = self.m[i] / (1-self.beta1**self.t)
             v_hat = self.v[i] / (1-self.beta2**self.t)
             
-            param.data -= self.lr*m_hat / (v_hat**0.5 + self.eps)
+            param -= self.lr*m_hat / (v_hat**0.5 + self.eps)
